@@ -1,0 +1,12 @@
+[Interface]
+#IP que será atribuido do tunel
+Address = 10.100.100.2/32
+#DNS que será atribuido e nome de DNS/dominio
+DNS = 192.168.15.1, lan
+
+[Peer]
+PublicKey =
+#Ips para passarem pelo tunnel, rede do tunel e rede LAN
+AllowedIPs = 10.100.100.0/24, 192.168.15.0/24
+# IP externo ou DYNDNS
+Endpoint = 
