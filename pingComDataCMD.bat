@@ -1,0 +1,1 @@
+ping -t 192.168.101.252|find /v ""|cmd /q /v:on /c "for /l %%a in (0) do (set "data="&set /p "data="&if defined data echo(!time! !data!)">"C:\pingimpressora.csv"
