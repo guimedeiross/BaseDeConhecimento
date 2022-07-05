@@ -1,0 +1,72 @@
+= SETUP =
+1: Start Windows Setup
+2: SHIFT F10
+3: diskpart
+4: list disk
+= Convert Disk 0 =
+5: select disk 0
+6: clean
+7: convert dynamic
+= Convert Disk 1 =
+8: select disk 1
+9: clean
+10: convert dynamic
+11: List Disk
+= PREPARE MIRROR  0 =
+12: select disk 0
+13: create volume mirror disk 0,1 size=550
+14: format quick fs=ntfs label="System Reserved"
+= PREPARE MIRROR  1 =
+15: select disk 0
+16: create volume mirror disk 0,1 size=39450
+17: format quick fs=ntfs label="Windows"
+18: list volume
+= MAKE DISK 0 "System Reserved" VOLUME USEABLE =
+19: select disk 0
+20: detail disk
+*** note down which volume number is the 550 MB "System Re" volume
+*** and which is the "Windows" volume number (You'll need it later)
+21: select volume 1 (or whatever the number was for "System Re")
+22: retain
+= MAKE DISK 0 "System Reserved" PARTITION USEABLE =
+23: select disk 0
+24: list partition
+*** again note which partition is the 550 MB partition
+26: select partition 2 (or whatever partition number you just noted)
+27: active
+= MAKE DISK 1 "System Reserved" VOLUME USEABLE =
+28: select disk 1
+29: detail disk
+*** note down which volume is the 550 MB "System Re" volume
+30: select volume 1 (same VOLUME from step 21 above)
+= MAKE DISK 1 "System Reserved" PARTITION USEABLE =
+31: retain
+32: select disk 1
+33: list partition
+*** again note which partition is the 550 MB partition
+34: select disk 1
+35: select partition 2 (or whatever partition number you just noted)
+36: active
+= MAKE MIRRORED "Windows" VOLUME USEABLE (BOTH DISKS) =
+37: select disk 0
+38: select volume 0 (or whatever the Windows Volume number was)
+39: retain
+40: select disk 1
+41: select volume 0 (or whatever the Windows Volume number was)
+42: retain
+= EXIT FROM DiskPart =
+43: Exit
+= EXIT FROM Cmd =
+44: Exit
+= Reformat =
+You have to let windows format the mirrored drive before it will install correctly
+ - do not skip this step!
+Proceed as usual until you get to the point where you choose where to install windows.
+45: Format the first partition (If it will let you)
+46: Format the Larger partition where Windows will be installed
+47: When formatting is complete make sure that partition is still selected
+48: Click Next and proceed as usual
+Computer reboots
+You see the logo and the starting dots...
+Computer may reboot a second time
+Finally you are presented with a login screen and your mirrored windows OS is ready and working.
