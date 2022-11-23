@@ -1,0 +1,19 @@
+Para filtrar os arquivos, na aba de segurança do event viewer, você vai em filtrar log e então vai na aba XML e marca para inserir XML manualmente e então coloca o código abaixo.
+
+<QueryList>
+
+  <Query Id="0" Path="Security">
+
+    <Select Path="Security">
+
+          *[System[band(Keywords,13510798882111488) and (EventID=4663)]]
+
+    and
+
+       *[EventData[Data[@Name='AccessMask']and(Data='0x10000')]]
+
+</Select>
+
+  </Query>
+
+</QueryList>
