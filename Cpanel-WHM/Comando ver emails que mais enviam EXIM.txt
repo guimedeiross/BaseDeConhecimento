@@ -1,0 +1,10 @@
+emails mais enviados ultimas 24 horas:
+
+sed -n '/2023-01-30 14/,/2023-02-01 14/p' /var/log/exim_mainlog | grep -oP "A=\K([A-Za-z0-9_.:]+)" | grep -oP ":\K(.*)" | sort | uniq -c | sort -nr
+
+emails que mais enviam geral:
+
+grep -oP "A=\K([A-Za-z0-9_.:]+)" /var/log/exim_mainlog | sort | uniq -c | sort -nr
+
+
+
