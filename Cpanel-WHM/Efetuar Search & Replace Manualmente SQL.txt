@@ -1,0 +1,24 @@
+importar arquivo após modificado
+mysql -ujv203_jv203 -p -A -D jv203_site < dump_file.sql
+
+exportar tabelas
+mysql -ujv203_jv203 -p -D jv203_site -A -e "show tables like 'wp_1611%'" > tables.txt
+
+usar o vim para remover primeira linha.
+
+mysqldump -ujv203_jv203 -p jv203_site `cat tables.txt` > dump_file.sql
+
+UPDATE `wp_1611_postmeta`
+ SET `meta_value` = replace(meta_value, 'jolpimoveis.jv203.net', 'www.jolp.com.br')
+
+UPDATE `wp_1611_posts`
+ SET `post_content` = replace(post_content, 'jolpimoveis.jv203.net', 'www.jolp.com.br')
+
+UPDATE `wp_1611_posts`
+ SET `guid` = replace(guid, 'jolpimoveis.jv203.net', 'www.jolp.com.br')
+
+UPDATE `wp_1611_options`
+ SET `option_value` = replace(option_value, 'jolpimoveis.jv203.net', 'www.jolp.com.br')
+
+UPDATE `wp_1611_revslider_slides`
+ SET `params` = replace(params, 'jolpimoveis.jv203.net', 'www.jolp.com.br')
