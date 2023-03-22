@@ -6,3 +6,5 @@ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 
 Informações completas no site abaixo:
 https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface#Mount_efivarfs
+
+Após isso, ajustar o UUID da partição vfat do UEFI no /etc/fstab
