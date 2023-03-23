@@ -8,3 +8,7 @@ Informações completas no site abaixo:
 https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface#Mount_efivarfs
 
 Após isso, ajustar o UUID da partição vfat do UEFI no /etc/fstab
+
+Caso quando iniciar o servidor, algum array md estiver com falha de superbloco, para o array e remontar com os comandos abaixo:
+sudo mdadm --stop /dev/mdX
+sudo mdadm --assemble --scan /dev/mdX
