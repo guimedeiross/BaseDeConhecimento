@@ -1,0 +1,20 @@
+Pegar dominios que mais enviaram emails em um intervalo de tempo:
+
+cat /var/log/exim_mainlog | awk '$0>="2023-05-19 01:" && $0<="2023-05-19 05:"' | grep -v "Nenhuma pessoa no endereço." | grep "SMTP connection outbound" | awk '{print $9}' | sort | uniq -c | sort -nr
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pegar emails enviados baseado no dominio retornado no código acima:
+cat /var/log/exim_mainlog | awk '$0>="2023-05-19 01:" && $0<="2023-05-19 05:"' | grep -v "Nenhuma pessoa no endereço." | grep "SMTP connection outbound" | grep "realtecautomacao.com.br"
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pegar nome do usuário baseado no dominio:
+whmapi1 listaccts searchtype=domain search="realtecautomacao.com.br" --output=jsonpretty | jq -r '.data.acct[].user'
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Este código faz tudo acima de uma vez retornando o usuário que mais enviou email na data informado no awk:
+cat /var/log/exim_mainlog | awk '$0>="2023-05-19 01:" && $0<="2023-05-19 05:"' | grep -v "Nenhuma pessoa no endereço." | grep "SMTP connection outbound" | awk '{print $9}' | sort | uniq -c | sort -nr | while read -r count domain; do
+    whmapi1 listaccts searchtype=domain search="$domain" --output=jsonpretty | jq -r '.data.acct[].user'
+done
