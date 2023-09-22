@@ -1,0 +1,23 @@
+begin routers
+# Roteamento para outlook.com, outlook.com.br e hotmail.com
+outlook_domains:
+  driver = manualroute
+  domains = outlook.com : outlook.com.br : hotmail.com
+  transport = outlook_relay
+  route_list = * IP_SERVIDOR_SMTP_DESTINO
+
+----------------------------------------------------------------------------------------------
+begin transports
+# Transporte para relay para o servidor Exim2
+outlook_relay:
+  driver = smtp
+  hosts_require_auth = IP_SERVIDOR_SMTP_DESTINO
+  hosts = *
+  port = 587
+  hosts_require_tls = IP_SERVIDOR_SMTP_DESTINO
+----------------------------------------------------------------------------------------------
+begin authenticators
+ses_login:
+driver = plaintext
+public_name = LOGIN
+client_send = : usuario@usuario : senhaEmail
