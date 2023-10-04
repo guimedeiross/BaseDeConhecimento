@@ -1,0 +1,10 @@
+Regra de roteamento onde configuramos que todos emails de dominio de remetente sagatransportes.com.br com destino ao
+dominio marcegaglia.com.br irá usar o roteamento configurado:
+
+# Roteamento para marcegaglia.com.br
+outlook_domains:
+  driver = manualroute
+  domains = marcegaglia.com.br
+  condition = ${if match{$sender_address_domain}{sagatransportes.com.br}}
+  transport = outlook_relay
+  route_list = * smtp.mailersend.net
