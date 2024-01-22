@@ -1,0 +1,46 @@
+Para criar uma storage local de ISOs no Xenserver/XCP-NG, usar o comando abaixo alterando o location:
+xe sr-create name-label=LocalISO type=iso device-config:location=/var/opt/xen/ISO_Store device-config:legacy_mode=true content-type=iso
+
+Adicionar regras de liberação as portas do SAMBA:
+sudo nano /etc/sysconfig/iptables
+
+yum install -y iptables-services && iptables -A INPUT -p udp --dport 137 -j ACCEPT; \
+iptables -A INPUT -p udp --dport 138 -j ACCEPT; \
+iptables -A INPUT -p tcp --dport 139 -j ACCEPT; \
+iptables -A INPUT -p tcp --dport 445 -j ACCEPT
+
+iptables-save > /etc/sysconfig/iptables
+
+Depois de adicionar o arquivo na cadeia de INPUT, reiniciar o iptables:
+sudo service iptables restart
+
+Criar usuario no linux sem poder logar e sem diretorio home:
+sudo useradd -s /usr/sbin/nologin -M usuario_sem_login
+
+Criar grupo que sera permitido no compartilhamento publico:
+groupadd publico nome_do_grupo
+
+Adicionar o usuário criado no grupo criado:
+usermod usuario_sem_login -a -G nome_do_grupo
+
+Mudar permissões e porpietário da pasta publica compartilhada:
+chmod 777 -R caminho_da_pasta
+chown -R root:nome_do_grupo caminho_da_pasta
+
+Adicionar compartilhamento publico no arquivo samba e reiniciar o serviço:
+nano /etc/samba/smb.conf
+
+[compartilhamento]
+    comment = Pasta Compartilhada
+    path = /caminho/para/compartilhamento
+    browseable = yes
+    writable = yes
+    create mask = 0666
+    directory mask = 0777
+    valid users = @usuarios-do-samba(aqui seria @nome_grupo que vai ter acesso pra ler e escrever na pasta)
+
+sudo service smbd restart
+
+Verificar se o servidor possui firewalld e selinux habilitados
+
+
