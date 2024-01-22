@@ -4,10 +4,10 @@ xe sr-create name-label=LocalISO type=iso device-config:location=/var/opt/xen/IS
 Adicionar regras de liberação as portas do SAMBA:
 sudo nano /etc/sysconfig/iptables
 
-yum install -y iptables-services && iptables -A INPUT -p udp --dport 137 -j ACCEPT; \
-iptables -A INPUT -p udp --dport 138 -j ACCEPT; \
-iptables -A INPUT -p tcp --dport 139 -j ACCEPT; \
-iptables -A INPUT -p tcp --dport 445 -j ACCEPT
+yum install -y iptables-services && iptables -I INPUT -p udp --dport 137 -j ACCEPT; \
+iptables -I INPUT -p udp --dport 138 -j ACCEPT; \
+iptables -I INPUT -p tcp --dport 139 -j ACCEPT; \
+iptables -I INPUT -p tcp --dport 445 -j ACCEPT
 
 iptables-save > /etc/sysconfig/iptables
 
