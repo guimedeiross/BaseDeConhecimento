@@ -40,6 +40,7 @@ nano /etc/samba/smb.conf
     valid users = @usuarios-do-samba(aqui seria @nome_grupo que vai ter acesso pra ler e escrever na pasta)
 
 sudo service smbd restart
+sudo systemctl enable smbd
 
 Verificar se o servidor possui firewalld e selinux habilitados
 
