@@ -27,4 +27,7 @@ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 
 grub-install /dev/sdX
 
+Quando for adicionar um novo disco para refazer o RAID, após criar as partições de tamanhos iguais, formatar a partição UEFI com o comando abaixo:
+mkfs.fat -F 32 /dev/sdxY
+
 NÃO ESQUECER DE AJUSTAR OS FSTAB DA PARTIÇÃO UEFI E SE TIVER USANDO OPENMEDIAVAULT, COMENTAR O DISCO MONTADO
