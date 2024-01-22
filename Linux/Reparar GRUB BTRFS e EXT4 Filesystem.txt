@@ -1,0 +1,30 @@
+Seguir os passos dessa pagina WEB:
+http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/
+
+Se for UEFI, irá precisar carregar o modulo efivarfs:
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+
+Informações completas no site abaixo:
+https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface#Mount_efivarfs
+
+Após isso, ajustar o UUID da partição vfat do UEFI no /etc/fstab
+
+Caso quando iniciar o servidor, algum array md estiver com falha de superbloco, para o array e remontar com os comandos abaixo:
+sudo mdadm --stop /dev/mdX
+sudo mdadm --assemble --scan /dev/mdX
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+Reparar GRUB EXT4:
+
+Seguir passos de mount e chroot da pagina web do btrfs:
+http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/
+
+Após dar o chroot fazer os passos abaixo se for EFI:
+
+modprobe efivarfs
+
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+
+grub-install /dev/sdX
+
+NÃO ESQUECER DE AJUSTAR OS FSTAB DA PARTIÇÃO UEFI E SE TIVER USANDO OPENMEDIAVAULT, COMENTAR O DISCO MONTADO
