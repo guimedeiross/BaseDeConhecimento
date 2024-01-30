@@ -31,3 +31,5 @@ Quando for adicionar um novo disco para refazer o RAID, após criar as partiçõ
 mkfs.fat -F 32 /dev/sdxY
 
 NÃO ESQUECER DE AJUSTAR OS FSTAB DA PARTIÇÃO UEFI E SE TIVER USANDO OPENMEDIAVAULT, COMENTAR O DISCO MONTADO
+
+teste
