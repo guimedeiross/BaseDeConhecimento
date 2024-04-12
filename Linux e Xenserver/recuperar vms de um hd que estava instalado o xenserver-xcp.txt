@@ -1,0 +1,6 @@
+UUID está no nome do volume por exemplo no volume com nome VG_XenStorage-5c76fc60-a438-06dd-d811-50a55f80a075, o uuid do storage é 5c76fc60-a438-06dd-d811-50a55f80a075.
+xe sr-introduce uuid=5c76fc60-a438-06dd-d811-50a55f80a075 type=lvm name-label="local storage2" content-type=user
+-----Vai dar um uuid que vai usar no próximo comando em sr-uuid:
+xe pbd-create host-uuid=074836d8-f1f4-47e8-8503-9a46712caaf1 sr-uuid=5c76fc60-a438-06dd-d811-50a55f80a075 device-config:device=/dev/disk/by-id/ata-VBOX_HARDDISK_VBad5ecb36-64c6dd42-part3
+
+no parâmetro "device-config:device=" você tem que pegar a partição que contém o lvm, geralmente a 3ª partição como a sda3 por exemplo, da pra pegar dando um ls -l em /dev/disk/by-id/
