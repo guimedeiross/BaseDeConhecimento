@@ -1,0 +1,1 @@
+rmlint -pp -T "defaults -ed -ef" -g -o sh:/root/rmlint.sh -c sh:clone /srv/dev-disk-by-uuid-80733f9a-9d4c-4953-8f46-efe011494960/Servidor/ && sh /root/rmlint.sh -d && rm -f /root/rmlint*
