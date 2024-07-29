@@ -1,0 +1,1 @@
+apt install -y screen htop iotop fio vim nano ncdu bmon iftop parted gdisk ntfs-3g cifs-utils libfuse2 exfat-fuse exfatprogs iperf3
