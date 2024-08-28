@@ -1,1 +1,0 @@
-﻿Test-Connection -ComputerName adsrv01 -Count ([int32]::MaxValue) | select @{n=’Date/Time’;e={Get-Date}},Address , IPv4Address ,ResponseTime | Format-Table > C:\ping-servidor.csv
