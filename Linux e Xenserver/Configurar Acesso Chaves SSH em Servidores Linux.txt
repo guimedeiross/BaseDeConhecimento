@@ -1,0 +1,6 @@
+Gerar chave no cliente usando o comando abaixo:
+ssh-keygen
+Copiar a chave pública do cliente que fica em 
+~/.ssh/id_rsa.pub
+Colar a chave neste arquivo no servidor que vai ser acessado por chave:
+~/.ssh/authorized_keys
