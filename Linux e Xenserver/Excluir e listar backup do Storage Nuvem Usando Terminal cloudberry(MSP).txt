@@ -1,0 +1,24 @@
+Para listar os backups que possuem no storage o comando abaixo:
+
+./cbbV2 storage list -a "Account Name"
+
+Onde Account name é o nome da conta do storage onde é feito os backups. 
+
+Segue email abaixo do Suporte da MSP360/Cloudberry sobre como excluir backups do storage usando o terminal/CLI no Linux:
+
+"Hello,
+
+Thank you for clarification.
+
+In such case please use CLIv2 and storage command:
+https://help.mspbackups.com/using-command-line-interface/linux/list
+
+Please note that delete command is not mentioned in the documentation. Please use the following command for more information:
+./cbbV2 storage delete --help
+
+full command will be looking like that
+./cbbV2 storage delete -a "Account Name" -b "Plan name"
+
+where Account Name and Plan Name are changed to actual names of account and plans.
+
+Let me know if this information helps."
