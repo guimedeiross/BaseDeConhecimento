@@ -12,6 +12,9 @@ add action=accept chain=input comment=\
     icmp
 add action=accept chain=input comment="LIBERA VPN" dst-port=13231 protocol=\
     udp
+add action=accept chain=input comment="LIBERA DNS" dst-port=53 protocol=udp src-address-list=ACESSOMK
+add action=accept chain=input comment="LIBERA DNS" dst-port=53 protocol=tcp src-address-list=ACESSOMK
+add action=accept chain=input comment="LIBERA DNS" dst-port=953 protocol=tcp src-address-list=ACESSOMK
 add action=drop chain=input comment="DROP GERAL"
 /ip firewall nat
 add action=masquerade chain=srcnat comment="fix the ntp client by changing its\
@@ -27,5 +30,8 @@ add action=accept chain=input comment=\
     icmpv6
 add action=accept chain=input comment="LIBERA DHCP CLIENT" in-interface=\
     ether1 protocol=udp src-port=546,547
+add action=drop chain=forward comment=\
+    "BLOQUEIA ACESSO DA INTERNET PELO IPV6 EM EQUIPAMENTOS LOCAIS" \
+    connection-state=new in-interface=ether1
 add action=drop chain=input comment="DROP GERAL"
 
