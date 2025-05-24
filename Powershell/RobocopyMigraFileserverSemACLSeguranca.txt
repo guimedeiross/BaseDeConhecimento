@@ -1,0 +1,6 @@
+$timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"; `
+robocopy 'F:\0bd95f77b68b24f5ee624f8f' '\\ncompwin2019\f$\0bd95f77b68b24f5ee624f8f' /E /ZB /R:3 /W:3 /MT /LOG:"C:\logmigra\log1$timestamp.txt"; `
+robocopy 'F:\C' '\\ncompwin2019\f$\C' /E /ZB /R:3 /W:3 /MT /LOG:"C:\logmigra\log2$timestamp.txt"; `
+robocopy 'F:\Dados' '\\ncompwin2019\f$\Dados' /E /ZB /R:3 /W:3 /MT /LOG:"C:\logmigra\log3$timestamp.txt"; `
+robocopy 'F:\email-antigo-thunderbird' '\\ncompwin2019\f$\email-antigo-thunderbird' /E /ZB /R:3 /W:3 /MT /LOG:"C:\logmigra\log4$timestamp.txt"; `
+robocopy 'F:\temp' '\\ncompwin2019\f$\temp' /E /ZB /R:3 /W:3 /MT /LOG:"C:\logmigra\log5$timestamp.txt"; `
