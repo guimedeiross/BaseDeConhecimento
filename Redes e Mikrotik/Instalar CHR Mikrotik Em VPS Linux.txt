@@ -1,1 +1,2 @@
 https://github.com/safrinnetwork/ACHR-Ubuntu
+https://github.com/azadrahorg/Install-MikroTik-CHR-on-VPS
