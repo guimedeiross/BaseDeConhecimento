@@ -8,9 +8,9 @@ Resetar a senha de admin do UNIFI Controller no Windows:
 
 4 - Ir pelo cmd na pasta "C:\passwordrecoverunifi\bin" e executar os commandos abaixo:
 
-mongosh.exe --port 27117
-use ace
-db.admin.find()
+mongosh.exe --port 27117  
+use ace  
+db.admin.find()  
 
 db.admin.update( { "name" : "admin" }, { $set : { "x_shadow" : "$6$ybLXKYjTNj9vv$dgGRjoXYFkw33OFZtBsp1flbCpoFQR7ac8O0FrZixHG.sw2AQmA5PuUbQC/e5.Zu.f7pGuF7qBKAfT/JRZFk8/" } } )
 
