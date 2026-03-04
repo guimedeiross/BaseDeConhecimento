@@ -1,0 +1,125 @@
+# ==========================
+# Reparar Windows Update - Windows 11
+# Executar como Administrador
+# ==========================
+
+# Falhas param o script por padrão
+$ErrorActionPreference = 'Stop'
+
+Write-Host "== Iniciando reparo do Windows Update ==" -ForegroundColor Cyan
+
+# 1) Parar serviços relacionados
+$services = @('wuauserv','bits','cryptsvc')
+foreach ($svc in $services) {
+    try {
+        Write-Host "Parando serviço: $svc"
+        Stop-Service -Name $svc -Force -ErrorAction SilentlyContinue
+        # Aguarda realmente parar
+        Get-Service $svc | Where-Object {$_.Status -ne 'Stopped'} | ForEach-Object {
+            $_.WaitForStatus('Stopped','00:00:20')
+        }
+    } catch {
+        Write-Host "Aviso: não foi possível parar $svc (pode já estar parado)." -ForegroundColor Yellow
+    }
+}
+
+# (Opcional) Parar Windows Modules Installer se estiver em execução
+try {
+    $ti = Get-Service -Name 'trustedinstaller' -ErrorAction SilentlyContinue
+    if ($ti -and $ti.Status -ne 'Stopped') {
+        Write-Host "Parando serviço: trustedinstaller"
+        Stop-Service trustedinstaller -Force
+        (Get-Service trustedinstaller).WaitForStatus('Stopped','00:00:20')
+    }
+} catch {}
+
+# 2) Limpar fila do BITS
+try {
+    Write-Host "Limpando fila do BITS (transferências pendentes)..."
+    $bits = Get-BitsTransfer -AllUsers -ErrorAction SilentlyContinue
+    if ($bits) { $bits | Remove-BitsTransfer -Confirm:$false }
+} catch {
+    Write-Host "Aviso: falha ao limpar fila do BITS (pode estar vazia)." -ForegroundColor Yellow
+}
+
+# 3) Renomear SoftwareDistribution e Catroot2
+$sdPath  = Join-Path $env:SystemRoot 'SoftwareDistribution'
+$crPath  = Join-Path $env:SystemRoot 'System32\catroot2'
+$stamp   = (Get-Date).ToString('yyyyMMdd_HHmmss')
+
+try {
+    if (Test-Path $sdPath) {
+        $sdBackup = "$sdPath.bak_$stamp"
+        Write-Host "Renomeando $sdPath -> $sdBackup"
+        Rename-Item -Path $sdPath -NewName (Split-Path $sdBackup -Leaf) -ErrorAction Stop
+    }
+} catch {
+    Write-Host "Aviso: não foi possível renomear SoftwareDistribution. Tentando limpar conteúdo..." -ForegroundColor Yellow
+    try { Remove-Item -Path (Join-Path $sdPath '*') -Recurse -Force } catch {}
+}
+
+try {
+    # Catroot2 requer o CryptSvc parado (já parado no passo 1)
+    if (Test-Path $crPath) {
+        $crBackup = "$crPath.bak_$stamp"
+        Write-Host "Renomeando $crPath -> $crBackup"
+        Rename-Item -Path $crPath -NewName (Split-Path $crBackup -Leaf) -ErrorAction Stop
+    }
+} catch {
+    Write-Host "Aviso: não foi possível renomear Catroot2. Tentando limpar conteúdo..." -ForegroundColor Yellow
+    try { Remove-Item -Path (Join-Path $crPath '*') -Recurse -Force } catch {}
+}
+
+# 4) Reset de rede e proxy que impactam o Windows Update
+try {
+    Write-Host "Resetando Winsock..."
+    netsh winsock reset | Out-Null
+    Write-Host "Resetando WinHTTP proxy..."
+    netsh winhttp reset proxy | Out-Null
+} catch {
+    Write-Host "Aviso: falha ao resetar Winsock/WinHTTP." -ForegroundColor Yellow
+}
+
+# 5) Garantir tipo de inicialização adequado
+Try {
+    Set-Service -Name bits -StartupType Automatic
+    Set-Service -Name wuauserv -StartupType Manual      # Padrão do Win11 é Manual (Trigger Start)
+    Set-Service -Name cryptsvc -StartupType Automatic
+} catch {}
+
+# 6) Iniciar serviços novamente
+foreach ($svc in $services) {
+    try {
+        Write-Host "Iniciando serviço: $svc"
+        Start-Service -Name $svc
+        (Get-Service $svc).WaitForStatus('Running','00:00:20')
+    } catch {
+        Write-Host "Aviso: não foi possível iniciar $svc imediatamente." -ForegroundColor Yellow
+    }
+}
+
+# 7) Reparar componentes com DISM e SFC
+Write-Host "Executando DISM /RestoreHealth (pode demorar)..." -ForegroundColor Cyan
+dism.exe /Online /Cleanup-Image /RestoreHealth
+
+Write-Host "Executando SFC /SCANNOW (pode demorar)..." -ForegroundColor Cyan
+sfc.exe /scannow
+
+# 8) Forçar nova verificação de updates
+Write-Host "Forçando nova verificação de atualizações..." -ForegroundColor Cyan
+try {
+    # Tenta via UsoClient (comandos disponíveis no Win11)
+    Start-Process -FilePath "$env:SystemRoot\System32\UsoClient.exe" -ArgumentList "StartScan" -WindowStyle Hidden -ErrorAction Stop
+    Start-Process -FilePath "$env:SystemRoot\System32\UsoClient.exe" -ArgumentList "StartDownload" -WindowStyle Hidden -ErrorAction SilentlyContinue
+    Start-Process -FilePath "$env:SystemRoot\System32\UsoClient.exe" -ArgumentList "StartInstall" -WindowStyle Hidden -ErrorAction SilentlyContinue
+} catch {
+    # Alternativa via COM
+    try {
+        $au = New-Object -ComObject Microsoft.Update.AutoUpdate
+        $au.DetectNow()
+    } catch {
+        Write-Host "Aviso: não foi possível acionar verificação via UsoClient/COM." -ForegroundColor Yellow
+    }
+}
+
+Write-Host "== Reparo concluído. Abra Configurações > Windows Update e verifique novamente. ==" -ForegroundColor Green
